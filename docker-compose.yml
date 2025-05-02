@@ -9,7 +9,7 @@ services:
       DATA_DIRECTORY: /data
       VALIDATOR_PRIVATE_KEY: $VALIDATOR_PRIVATE_KEY
       P2P_IP: $P2P_IP
-      LOG_LEVEL: $LOG_LEVEL
+      LOG_LEVEL: info
       OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: http://otel-collector:4318/v1/metrics
       OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://otel-collector:4318/v1/traces
     entrypoint: >
