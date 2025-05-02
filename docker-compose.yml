@@ -2,7 +2,7 @@
 name: aztec-node
 services:
   node:
-    image: aztecprotocol/aztec:0.85.0-alpha-testnet.5
+    image: aztecprotocol/aztec:${AZTEC_IMAGE_VERSION:-latest}
     environment:
       ETHEREUM_HOSTS: $L1_RPC_ENDPOINTS
       L1_CONSENSUS_HOST_URLS: $L1_CONSENSUS_ENDPOINTS
