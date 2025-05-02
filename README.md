@@ -9,7 +9,7 @@ Docker Compose setup for running the Aztec Network sequencer(testnet) and node m
 
 ### How to run the sequencer
 - `cp .env.sample .env`
-- **UPDATE ALL VARIABLES IN .env FILE**
+- **Update all variables in .env file**
 - `docker compose up -d`
 
 
