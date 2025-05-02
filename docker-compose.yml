@@ -1,0 +1,56 @@
+
+name: aztec-node
+services:
+  node:
+    image: aztecprotocol/aztec:0.85.0-alpha-testnet.5
+    environment:
+      ETHEREUM_HOSTS: $L1_RPC_ENDPOINTS
+      L1_CONSENSUS_HOST_URLS: $L1_CONSENSUS_ENDPOINTS
+      DATA_DIRECTORY: $DATA_DIRECTORY
+      VALIDATOR_PRIVATE_KEY: $VALIDATOR_PRIVATE_KEY
+      P2P_IP: $P2P_IP
+      LOG_LEVEL: $LOG_LEVEL
+      OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: http://otel-collector:4318/v1/metrics
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://otel-collector:4318/v1/traces
+    entrypoint: >
+      sh -c 'node --no-warnings /usr/src/yarn-project/aztec/dest/bin/index.js start --network alpha-testnet start --node --archiver --sequencer'
+    ports:
+      - 40400:40400/tcp
+      - 40400:40400/udp
+      - 8080:8080
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    ports:
+      - "127.0.0.1:8889:8889"
+    volumes:
+      - ./otel-config.yaml:/etc/otelcol-contrib/config.yaml
+    command:
+      - "--config=/etc/otelcol-contrib/config.yaml"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_USER=$GRAFANA_USER
+      - GF_SECURITY_ADMIN_PASSWORD=$GRAFANA_PASSWORD
+    depends_on:
+      - prometheus
+
+volumes:
+  grafana_data:
