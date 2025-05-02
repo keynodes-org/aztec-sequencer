@@ -6,7 +6,7 @@ services:
     environment:
       ETHEREUM_HOSTS: $L1_RPC_ENDPOINTS
       L1_CONSENSUS_HOST_URLS: $L1_CONSENSUS_ENDPOINTS
-      DATA_DIRECTORY: $DATA_DIRECTORY
+      DATA_DIRECTORY: /data
       VALIDATOR_PRIVATE_KEY: $VALIDATOR_PRIVATE_KEY
       P2P_IP: $P2P_IP
       LOG_LEVEL: $LOG_LEVEL
@@ -18,6 +18,8 @@ services:
       - 40400:40400/tcp
       - 40400:40400/udp
       - 8080:8080
+    volumes:
+      - ./aztec-data:/data
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
